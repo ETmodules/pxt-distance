@@ -105,8 +105,8 @@ namespace EtDistance {
         MODULE = id
     }
 
-    //% block="with %id: %name %ori is %dist cm"
-    //% block.loc.nl="voor %id: is %name %ori %dist cm"
+    //% block="with %id %name %ori is %dist cm"
+    //% block.loc.nl="bij %id is %name %ori %dist cm"
     //% id.defl="EtDistance"
     //% dist.min=20 dist.max=300 dist.defl=50
     export function setDistance(id: string, name: SetDistance, ori: Orientation, dist: number) {
@@ -124,7 +124,7 @@ namespace EtDistance {
     }
 
     //% block="with %id turns %ori %degr degrees"
-    //% block.loc.nl="voor %id draait %ori %degr graden"
+    //% block.loc.nl="bij %id draait %ori %degr graden"
     //% id.defl="EtDistance"
     //% degr.min=0 degr.max=45 degr.defl=45
     export function setAngle(id: string, ori: SetOrientation, ang: number) {
