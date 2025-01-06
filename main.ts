@@ -16,6 +16,15 @@ namespace EtDistance {
         Right
     }
 
+    export enum SetDistance {
+        //% block="nearby"
+        //% block.loc.nl="dichtbij"
+        Near,
+        //% block="far away"
+        //% block.loc.nl="verweg"
+        Away
+    }
+
     export enum Distance {
         //% block="normal"
         //% block.loc.nl="normaal"
@@ -92,13 +101,13 @@ namespace EtDistance {
     //% id.defl="EtDistance"
     //% dist.min=20 dist.max=300 dist.defl=50
     //% name.min=1
-    export function setDistance(id: string, name: Distance, dist: number) {
+    export function setDistance(id: string, name: SetDistance, dist: number) {
         switch (name) {
 
-            case Distance.Near:
+            case SetDistance.Near:
                 EtCommon.setValue(id, "near", dist.toString())
                 break
-            case Distance.Away:
+            case SetDistance.Away:
                 EtCommon.setValue(id, "away", dist.toString())
                 break
         }
