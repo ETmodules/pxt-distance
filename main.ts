@@ -5,26 +5,26 @@ namespace EtDistance {
     let MODULE = "EtDistance"
 
     export enum Orientation {
-        //% block="front"
+        //% block="at front"
         //% block.loc.nl="van voren"
         Front,
-        //% block="from left"
+        //% block="at the left"
         //% block.loc.nl="vanaf links"
         Left,
-        //% block="from right"
+        //% block="at the right"
         //% block.loc.nl="vanaf rechts"
         Right
     }
 
     export enum Distance {
-        //% block="at a normal distance"
-        //% block.loc.nl="normale afstand"
+        //% block="normal"
+        //% block.loc.nl="normaal"
         Normal,
-        //% block="from nearby"
-        //% block.loc.nl="van dichtbij"
+        //% block="nearby"
+        //% block.loc.nl="dichtbij"
         Near,
-        //% block="from far away"
-        //% block.loc.nl="van ver"
+        //% block="far away"
+        //% block.loc.nl="verweg"
         Away
     }
 
@@ -87,11 +87,11 @@ namespace EtDistance {
         MODULE = id
     }
 
-    //% block="with %id %name is %comp %dist cm"
-    //% block.loc.nl="voor %id is %name %comp %dist cm"
+    //% block="with %id %name is %dist cm"
+    //% block.loc.nl="voor %id is %name %dist cm"
     //% id.defl="EtDistance"
     //% dist.min=20 dist.max=300 dist.defl=50
-    export function setSpeedMps(id: string, name: Distance, dist: number) {
+    export function setDistance(id: string, name: Distance, dist: number) {
         switch (name) {
             case Distance.Normal:
                 EtCommon.setValue(id, "normal", dist.toString())
@@ -105,10 +105,10 @@ namespace EtDistance {
         }
     }
 
-    //% block="when something approaches %id %dist %ori"
-    //% block.loc.nl="wanneer iets %id %dist nadert %ori"
+    //% block="when the distance %ori to %id is %dist"
+    //% block.loc.nl="wanneer de afstand %ori tot %dist %id is"
     //% id.defl="EtDistance"
-    export function onDistance(id: string, dist: Distance, ori: Orientation, programmableCode: () => void): void {
+    export function onDistance(ori: Orientation, id: string, dist: Distance, programmableCode: () => void): void {
         let event: EtCommon.eventHandler
         let item: EtCommon.eventItem
         let sig: string
