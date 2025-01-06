@@ -91,22 +91,21 @@ namespace EtDistance {
     //% block.loc.nl="voor %id is %name %dist cm"
     //% id.defl="EtDistance"
     //% dist.min=20 dist.max=300 dist.defl=50
+    //% name.min=1
     export function setDistance(id: string, name: Distance, dist: number) {
         switch (name) {
-            case Distance.Normal:
-                EtCommon.setValue(id, "normal", dist.toString())
-                break
-            case Distance.Normal:
+
+            case Distance.Near:
                 EtCommon.setValue(id, "near", dist.toString())
                 break
-            case Distance.Normal:
+            case Distance.Away:
                 EtCommon.setValue(id, "away", dist.toString())
                 break
         }
     }
 
     //% block="when the distance %ori to %id is %dist"
-    //% block.loc.nl="wanneer de afstand %ori tot %dist %id is"
+    //% block.loc.nl="wanneer de afstand %ori tot %id %dist is"
     //% id.defl="EtDistance"
     export function onDistance(ori: Orientation, id: string, dist: Distance, programmableCode: () => void): void {
         let event: EtCommon.eventHandler
