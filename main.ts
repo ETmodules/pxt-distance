@@ -6,32 +6,44 @@ namespace EtDistance {
 
     export enum Orientation {
         //% block="front"
-        //% block.loc.nl="recht voor"
-        ORI_FRONT,
-        //% block="left"
-        //% block.loc.nl="links voor"
-        ORI_LEFT,
-        //% block="right"
-        //% block.loc.nl="rechts voor"
-        ORI_RIGHT
+        //% block.loc.nl="van voren"
+        Front,
+        //% block="from left"
+        //% block.loc.nl="vanaf links"
+        Left,
+        //% block="from right"
+        //% block.loc.nl="vanaf rechts"
+        Right
+    }
+
+    export enum Distance {
+        //% block="at a normal distance"
+        //% block.loc.nl="normale afstand"
+        Normal,
+        //% block="from nearby"
+        //% block.loc.nl="van dichtbij"
+        Near,
+        //% block="from far away"
+        //% block.loc.nl="van ver"
+        Away
     }
 
     let EventFrontNormal: EtCommon.eventHandler
-    let EventFrontClose: EtCommon.eventHandler
+    let EventFrontNear: EtCommon.eventHandler
     let EventFrontAway: EtCommon.eventHandler
     let EventLeftNormal: EtCommon.eventHandler
-    let EventLeftClose: EtCommon.eventHandler
+    let EventLeftNear: EtCommon.eventHandler
     let EventLeftAway: EtCommon.eventHandler
     let EventRightNormal: EtCommon.eventHandler
-    let EventRightClose: EtCommon.eventHandler
+    let EventRightNear: EtCommon.eventHandler
     let EventRightAway: EtCommon.eventHandler
 
     export function onEventFrontNormal(id: string) {
         if (EventFrontNormal) EventFrontNormal(id)
     }
 
-    export function onEventFrontClose(id: string) {
-        if (EventFrontClose) EventFrontClose(id)
+    export function onEventFrontNear(id: string) {
+        if (EventFrontNear) EventFrontNear(id)
     }
 
     export function onEventFrontAway(id: string) {
@@ -42,8 +54,8 @@ namespace EtDistance {
         if (EventLeftNormal) EventLeftNormal(id)
     }
 
-    export function onEventLeftClose(id: string) {
-        if (EventLeftClose) EventLeftClose(id)
+    export function onEventLeftNear(id: string) {
+        if (EventLeftNear) EventLeftNear(id)
     }
 
     export function onEventLeftAway(id: string) {
@@ -54,8 +66,8 @@ namespace EtDistance {
         if (EventRightNormal) EventRightNormal(id)
     }
 
-    export function onEventRightClose(id: string) {
-        if (EventRightClose) EventRightClose(id)
+    export function onEventRightNear(id: string) {
+        if (EventRightNear) EventRightNear(id)
     }
 
     export function onEventRightAway(id: string) {
@@ -70,62 +82,80 @@ namespace EtDistance {
 
     //% block="set module id to %id"
     //% block.loc.nl="stel de module id in op %id"
-    //% id.defl="EtAudio"
+    //% id.defl="EtDistance"
     export function setModuleId(id: string) {
         MODULE = id
     }
 
-    //% block="when %id measures %comp distance at %ori"
-    //% block.loc.nl="wanneer %id op %ori dichtbij meet"
-    //% id.defl="EtAudio"
-    export function onDistance(id: string, ori: Orientation, comp: EtCommon.Comparison, programmableCode: () => void): void {
+    //% block="with %id %name is %comp %dist cm"
+    //% block.loc.nl="voor %id is %name %comp %dist cm"
+    //% id.defl="EtDistance"
+    //% dist.min=20 dist.max=300 dist.defl=50
+    export function setSpeedMps(id: string, name: Distance, dist: number) {
+        switch (name) {
+            case Distance.Normal:
+                EtCommon.setValue(id, "normal", dist.toString())
+                break
+            case Distance.Normal:
+                EtCommon.setValue(id, "near", dist.toString())
+                break
+            case Distance.Normal:
+                EtCommon.setValue(id, "away", dist.toString())
+                break
+        }
+    }
+
+    //% block="when something approaches %id %dist %ori"
+    //% block.loc.nl="wanneer iets %id %dist nadert %ori"
+    //% id.defl="EtDistance"
+    export function onDistance(id: string, dist: Distance, ori: Orientation, programmableCode: () => void): void {
         let event: EtCommon.eventHandler
         let item: EtCommon.eventItem
         let sig: string
         switch (ori) {
-            case Orientation.ORI_FRONT:
-                switch (comp) {
-                    case EtCommon.Comparison.COMP_NORMAL: EventFrontNormal = programmableCode;
+            case Orientation.Front:
+                switch (dist) {
+                    case Distance.Normal: EventFrontNormal = programmableCode;
                         event = onEventFrontNormal;
                         sig = "frontnormal"
                         break;
-                    case EtCommon.Comparison.COMP_LESS: EventFrontClose = programmableCode;
-                        event = onEventFrontClose;
-                        sig = "frontclose"
+                    case Distance.Near: EventFrontNear = programmableCode;
+                        event = onEventFrontNear;
+                        sig = "frontnear"
                         break;
-                    case EtCommon.Comparison.COMP_GREATER: EventFrontAway = programmableCode;
+                    case Distance.Away: EventFrontAway = programmableCode;
                         event = onEventFrontAway;
                         sig = "frontaway"
                         break;
                 }
                 break;
-            case Orientation.ORI_LEFT:
-                switch (comp) {
-                    case EtCommon.Comparison.COMP_NORMAL: EventLeftNormal = programmableCode;
+            case Orientation.Left:
+                switch (dist) {
+                    case Distance.Normal: EventLeftNormal = programmableCode;
                         event = onEventLeftNormal;
                         sig = "leftnormal"
                         break;
-                    case EtCommon.Comparison.COMP_LESS: EventLeftClose = programmableCode;
-                        event = onEventLeftClose;
-                        sig = "leftclose"
+                    case Distance.Near: EventLeftNear = programmableCode;
+                        event = onEventLeftNear;
+                        sig = "leftnear"
                         break;
-                    case EtCommon.Comparison.COMP_GREATER: EventLeftAway = programmableCode;
+                    case Distance.Away: EventLeftAway = programmableCode;
                         event = onEventLeftAway;
                         sig = "leftaway"
                         break;
                 }
                 break;
-            case Orientation.ORI_RIGHT:
-                switch (comp) {
-                    case EtCommon.Comparison.COMP_NORMAL: EventRightNormal = programmableCode;
+            case Orientation.Right:
+                switch (dist) {
+                    case Distance.Normal: EventRightNormal = programmableCode;
                         event = onEventRightNormal;
                         sig = "rightnormal"
                         break;
-                    case EtCommon.Comparison.COMP_LESS: EventRightClose = programmableCode;
-                        event = onEventRightClose;
-                        sig = "rightclose"
+                    case Distance.Near: EventRightNear = programmableCode;
+                        event = onEventRightNear;
+                        sig = "rightnear"
                         break;
-                    case EtCommon.Comparison.COMP_GREATER: EventRightAway = programmableCode;
+                    case Distance.Away: EventRightAway = programmableCode;
                         event = onEventRightAway;
                         sig = "rightaway"
                         break;
