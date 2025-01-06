@@ -96,8 +96,8 @@ namespace EtDistance {
         MODULE = id
     }
 
-    //% block="with %id %name when %ori is %dist cm"
-    //% block.loc.nl="voor %id is %name wanneer %ori %dist cm"
+    //% block="with %id %name %ori is %dist cm"
+    //% block.loc.nl="voor %id is %name %ori %dist cm"
     //% id.defl="EtDistance"
     //% dist.min=20 dist.max=300 dist.defl=50
     export function setDistance(id: string, name: SetDistance, ori: Orientation, dist: number) {
