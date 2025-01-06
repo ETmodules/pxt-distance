@@ -1,4 +1,4 @@
-//% color="#EEAA00" icon="\uf028"
+//% color="#EEAA00" icon="\uf140"
 //% block="ET: Distance"
 //% block.loc.nl="ET: Distance"
 namespace EtDistance {
