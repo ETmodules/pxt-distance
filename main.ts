@@ -107,6 +107,7 @@ namespace EtDistance {
 
     //% block="with %id %name %ori is %dist cm"
     //% block.loc.nl="bij %id is %name %ori %dist cm"
+    //% inlineInputMode=inline
     //% id.defl="EtDistance"
     //% dist.min=20 dist.max=300 dist.defl=50
     export function setDistance(id: string, name: SetDistance, ori: Orientation, dist: number) {
@@ -127,13 +128,13 @@ namespace EtDistance {
     //% block.loc.nl="bij %id draait %ori %degr graden"
     //% id.defl="EtDistance"
     //% degr.min=0 degr.max=45 degr.defl=45
-    export function setAngle(id: string, ori: SetOrientation, ang: number) {
+    export function setAngle(id: string, ori: SetOrientation, degr: number) {
         let signal: string
         switch (ori) {
             case SetOrientation.Left: signal = "leftangle"; break;
             case SetOrientation.Right: signal = "rightangle"; break;
         }
-        EtCommon.setValue(id, signal, ang.toString())
+        EtCommon.setValue(id, signal, degr.toString())
     }
 
     //% block="the distance in cm %ori to %id"
