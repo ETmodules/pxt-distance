@@ -96,21 +96,41 @@ namespace EtDistance {
         MODULE = id
     }
 
-    //% block="with %id %name is %dist cm"
-    //% block.loc.nl="voor %id is %name %dist cm"
+    //% block="with %id %name when %ori is %dist cm"
+    //% block.loc.nl="voor %id is %name wanneer %ori %dist cm"
     //% id.defl="EtDistance"
     //% dist.min=20 dist.max=300 dist.defl=50
-    //% name.min=1
-    export function setDistance(id: string, name: SetDistance, dist: number) {
-        switch (name) {
-
-            case SetDistance.Near:
-                EtCommon.setValue(id, "near", dist.toString())
-                break
-            case SetDistance.Away:
-                EtCommon.setValue(id, "away", dist.toString())
-                break
+    export function setDistance(id: string, name: SetDistance, ori: Orientation, dist: number) {
+        let signal: string
+        switch (ori) {
+            case Orientation.Front: signal = "front"; break;
+            case Orientation.Left: signal = "left"; break;
+            case Orientation.Right: signal = "right"; break;
         }
+        switch (name) {
+            case SetDistance.Near: signal += "near"; break;
+            case SetDistance.Away: signal += "away"; break;
+        }
+        EtCommon.setValue(id, signal, dist.toString())
+    }
+
+    //% block="the distance in cm %ori to %id"
+    //% block.loc.nl="de afstand in cm %ori tot %id"
+    //% id.defl="EtDistance"
+    export function askDistance(ori: Orientation, id: string) : number {
+        let signal: string
+        switch (ori) {
+            case Orientation.Front: signal = "front"; break;
+            case Orientation.Left: signal = "left"; break;
+            case Orientation.Right: signal = "right"; break;
+        }
+        EtCommon.askValue(id, signal)
+        let ret: string
+        do {
+            ret = EtCommon.getValue(MODULE, "A", signal)
+        }
+        while (ret.isEmpty())
+        return parseFloat( ret)
     }
 
     //% block="when the distance %ori to %id is %dist"
