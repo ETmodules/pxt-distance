@@ -160,58 +160,55 @@ namespace EtDistance {
     //% block.loc.nl="wanneer de afstand %ori tot %id %dist is"
     //% id.defl="EtDistance"
     export function onDistance(ori: Orientation, id: string, dist: Distance, programmableCode: () => void): void {
-        let sig: string
-        let hnd: EtCommon.eventHandler;
         switch (ori) {
             case Orientation.Front:
                 switch (dist) {
-                    case Distance.Normal: EventFrontNormal = programmableCode;
-                        hnd = onEventFrontNormal
-                        sig = "frontnormal"
-                        break;
-                    case Distance.Near: EventFrontNear = programmableCode;
-                        hnd = onEventFrontNear;
-                        sig = "frontnear"
-                        break;
-                    case Distance.Away: EventFrontAway = programmableCode;
-                        hnd = onEventFrontAway;
-                        sig = "frontaway"
-                        break;
+                    case Distance.Normal:
+                        EventFrontNormal = programmableCode
+                        EtCommon.events.register(MODULE, "front", "normal", onEventFrontNormal)
+                        break
+                    case Distance.Near:
+                        EventFrontNear = programmableCode
+                        EtCommon.events.register(MODULE, "front", "near", onEventFrontNear)
+                        break
+                    case Distance.Away:
+                        EventFrontAway = programmableCode
+                        EtCommon.events.register(MODULE, "front", "away", onEventFrontAway)
+                        break
                 }
-                break;
+                break
             case Orientation.Left:
                 switch (dist) {
-                    case Distance.Normal: EventLeftNormal = programmableCode;
-                        hnd = onEventLeftNormal;
-                        sig = "leftnormal"
-                        break;
-                    case Distance.Near: EventLeftNear = programmableCode;
-                        hnd = onEventLeftNear;
-                        sig = "leftnear"
-                        break;
-                    case Distance.Away: EventLeftAway = programmableCode;
-                        hnd = onEventLeftAway;
-                        sig = "leftaway"
-                        break;
+                    case Distance.Normal:
+                        EventLeftNormal = programmableCode
+                        EtCommon.events.register(MODULE, "left", "normal", onEventLeftNormal)
+                        break
+                    case Distance.Near:
+                        EventLeftNear = programmableCode
+                        EtCommon.events.register(MODULE, "left", "near", onEventLeftNear)
+                        break
+                    case Distance.Away:
+                        EventLeftAway = programmableCode
+                        EtCommon.events.register(MODULE, "left", "away", onEventLeftAway)
+                        break
                 }
-                break;
+                break
             case Orientation.Right:
                 switch (dist) {
-                    case Distance.Normal: EventRightNormal = programmableCode;
-                        hnd = onEventRightNormal;
-                        sig = "rightnormal"
-                        break;
-                    case Distance.Near: EventRightNear = programmableCode;
-                        hnd = onEventRightNear;
-                        sig = "rightnear"
-                        break;
-                    case Distance.Away: EventRightAway = programmableCode;
-                        hnd = onEventRightAway;
-                        sig = "rightaway"
-                        break;
+                    case Distance.Normal:
+                        EventRightNormal = programmableCode
+                        EtCommon.events.register(MODULE, "right", "normal", onEventRightNormal)
+                        break
+                    case Distance.Near:
+                        EventRightNear = programmableCode
+                        EtCommon.events.register(MODULE, "right", "near", onEventRightNear)
+                        break
+                    case Distance.Away:
+                        EventRightAway = programmableCode
+                        EtCommon.events.register(MODULE, "right", "away", onEventRightAway)
+                        break
                 }
-                break;
+                break
         }
-        EtCommon.events.register(MODULE, sig, "true", hnd)
     }
 }
