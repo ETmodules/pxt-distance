@@ -4,34 +4,16 @@
 namespace EtDistance {
     let MODULE = "EtDistance"
 
-    export enum SetOrientation {
+    export enum Orientation {
+        //% block="front"
+        //% block.loc.nl="voren"
+        Front,
         //% block="left"
         //% block.loc.nl="links"
         Left,
         //% block="right"
         //% block.loc.nl="rechts"
         Right
-    }
-
-    export enum Orientation {
-        //% block="at front"
-        //% block.loc.nl="van voren"
-        Front,
-        //% block="at the left"
-        //% block.loc.nl="vanaf links"
-        Left,
-        //% block="at the right"
-        //% block.loc.nl="vanaf rechts"
-        Right
-    }
-
-    export enum SetDistance {
-        //% block="nearby"
-        //% block.loc.nl="dichtbij"
-        Near,
-        //% block="far away"
-        //% block.loc.nl="verweg"
-        Away
     }
 
     export enum Distance {
@@ -105,109 +87,63 @@ namespace EtDistance {
         MODULE = id
     }
 
-    //% block="with %id %name %ori is %dist cm"
-    //% block.loc.nl="bij %id is %name %ori %dist cm"
+    //% block="with %id is %near cm nearby and %away cm far away"
+    //% block.loc.nl="bij %id is %near cm dichtbij en %away cm verweg"
     //% inlineInputMode=inline
     //% id.defl="EtDistance"
-    //% dist.min=20 dist.max=300 dist.defl=50
-    export function setDistance(id: string, name: SetDistance, ori: Orientation, dist: number) {
-        let signal: string
-        switch (ori) {
-            case Orientation.Front: signal = "front"; break;
-            case Orientation.Left: signal = "left"; break;
-            case Orientation.Right: signal = "right"; break;
-        }
-        switch (name) {
-            case SetDistance.Near: signal += "near"; break;
-            case SetDistance.Away: signal += "away"; break;
-        }
-        EtCommon.setValue(id, signal, dist.toString())
+    //% near.min=20 near.max=300 near.defl=75
+    //% away.min=20 away.max=300 away.defl=275
+    export function setDistribution(id: string, near: number, away: number) {
+        let val = near.toString() + "/" + away.toString()
+        EtCommon.setValue(id, "distribution", val)
     }
 
-    //% block="with %id turns %ori %degr degrees"
-    //% block.loc.nl="bij %id draait %ori %degr graden"
+    //% block="the distance in cm to %id"
+    //% block.loc.nl="de afstand in cm tot %id"
     //% id.defl="EtDistance"
-    //% degr.min=0 degr.max=45 degr.defl=45
-    export function setAngle(id: string, ori: SetOrientation, degr: number) {
-        let signal: string
-        switch (ori) {
-            case SetOrientation.Left: signal = "leftangle"; break;
-            case SetOrientation.Right: signal = "rightangle"; break;
-        }
-        EtCommon.setValue(id, signal, degr.toString())
-    }
-
-    //% block="the distance in cm %ori to %id"
-    //% block.loc.nl="de afstand in cm %ori tot %id"
-    //% id.defl="EtDistance"
-    export function askDistance(ori: Orientation, id: string) : number {
-        let signal: string
-        switch (ori) {
-            case Orientation.Front: signal = "front"; break;
-            case Orientation.Left: signal = "left"; break;
-            case Orientation.Right: signal = "right"; break;
-        }
-        EtCommon.askValue(id, signal)
+    export function askDistance(id: string): number {
+        EtCommon.askValue(id, "distance")
         let ret: string
         do {
-            ret = EtCommon.getValue(MODULE, "A", signal)
+            ret = EtCommon.getValue(MODULE, "A", "distance")
         }
         while (ret.isEmpty())
-        return parseFloat( ret)
+        return parseFloat(ret)
     }
 
-    //% block="when the distance %ori to %id is %dist"
-    //% block.loc.nl="wanneer de afstand %ori tot %id %dist is"
+    //% block="point %id %degr degrees to the %ori"
+    //% block.loc.nl="richt %id %degr graden naar %ori"
     //% id.defl="EtDistance"
-    export function onDistance(ori: Orientation, id: string, dist: Distance, programmableCode: () => void): void {
-        switch (ori) {
-            case Orientation.Front:
-                switch (dist) {
-                    case Distance.Normal:
-                        EventFrontNormal = programmableCode
-                        EtCommon.events.register(MODULE, "front", "normal", onEventFrontNormal)
-                        break
-                    case Distance.Near:
-                        EventFrontNear = programmableCode
-                        EtCommon.events.register(MODULE, "front", "near", onEventFrontNear)
-                        break
-                    case Distance.Away:
-                        EventFrontAway = programmableCode
-                        EtCommon.events.register(MODULE, "front", "away", onEventFrontAway)
-                        break
-                }
+    //% degr.min=0 degr.max=45 degr.defl=45
+    export function setAngle(id: string, degr: number, ori: Orientation) {
+        if (ori == Orientation.Left)
+            degr = -degr
+        EtCommon.setValue(id, "angle", degr.toString())
+    }
+
+    //% block="point %id straight to the front"
+    //% block.loc.nl="richt %id recht naar voren"
+    //% id.defl="EtDistance"
+    export function setFront(id: string) {
+        EtCommon.setValue(id, "angle", "0")
+    }
+
+    //% block="when the distance to %id is %dist"
+    //% block.loc.nl="wanneer de afstand tot %id %dist is"
+    //% id.defl="EtDistance"
+    export function onDistance(id: string, dist: Distance, programmableCode: () => void): void {
+        switch (dist) {
+            case Distance.Normal:
+                EventFrontNormal = programmableCode
+                EtCommon.events.register(MODULE, "distance", "normal", onEventFrontNormal)
                 break
-            case Orientation.Left:
-                switch (dist) {
-                    case Distance.Normal:
-                        EventLeftNormal = programmableCode
-                        EtCommon.events.register(MODULE, "left", "normal", onEventLeftNormal)
-                        break
-                    case Distance.Near:
-                        EventLeftNear = programmableCode
-                        EtCommon.events.register(MODULE, "left", "near", onEventLeftNear)
-                        break
-                    case Distance.Away:
-                        EventLeftAway = programmableCode
-                        EtCommon.events.register(MODULE, "left", "away", onEventLeftAway)
-                        break
-                }
+            case Distance.Near:
+                EventFrontNear = programmableCode
+                EtCommon.events.register(MODULE, "distance", "near", onEventFrontNear)
                 break
-            case Orientation.Right:
-                switch (dist) {
-                    case Distance.Normal:
-                        EventRightNormal = programmableCode
-                        EtCommon.events.register(MODULE, "right", "normal", onEventRightNormal)
-                        break
-                    case Distance.Near:
-                        EventRightNear = programmableCode
-                        EtCommon.events.register(MODULE, "right", "near", onEventRightNear)
-                        break
-                    case Distance.Away:
-                        EventRightAway = programmableCode
-                        EtCommon.events.register(MODULE, "right", "away", onEventRightAway)
-                        break
-                }
+            case Distance.Away:
+                EventFrontAway = programmableCode
+                EtCommon.events.register(MODULE, "distance", "away", onEventFrontAway)
                 break
         }
     }
