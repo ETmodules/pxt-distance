@@ -160,22 +160,21 @@ namespace EtDistance {
     //% block.loc.nl="wanneer de afstand %ori tot %id %dist is"
     //% id.defl="EtDistance"
     export function onDistance(ori: Orientation, id: string, dist: Distance, programmableCode: () => void): void {
-        let event: EtCommon.eventHandler
-        let item: EtCommon.eventItem
         let sig: string
+        let hnd: EtCommon.eventHandler;
         switch (ori) {
             case Orientation.Front:
                 switch (dist) {
                     case Distance.Normal: EventFrontNormal = programmableCode;
-                        event = onEventFrontNormal;
+                        hnd = onEventFrontNormal
                         sig = "frontnormal"
                         break;
                     case Distance.Near: EventFrontNear = programmableCode;
-                        event = onEventFrontNear;
+                        hnd = onEventFrontNear;
                         sig = "frontnear"
                         break;
                     case Distance.Away: EventFrontAway = programmableCode;
-                        event = onEventFrontAway;
+                        hnd = onEventFrontAway;
                         sig = "frontaway"
                         break;
                 }
@@ -183,15 +182,15 @@ namespace EtDistance {
             case Orientation.Left:
                 switch (dist) {
                     case Distance.Normal: EventLeftNormal = programmableCode;
-                        event = onEventLeftNormal;
+                        hnd = onEventLeftNormal;
                         sig = "leftnormal"
                         break;
                     case Distance.Near: EventLeftNear = programmableCode;
-                        event = onEventLeftNear;
+                        hnd = onEventLeftNear;
                         sig = "leftnear"
                         break;
                     case Distance.Away: EventLeftAway = programmableCode;
-                        event = onEventLeftAway;
+                        hnd = onEventLeftAway;
                         sig = "leftaway"
                         break;
                 }
@@ -199,21 +198,20 @@ namespace EtDistance {
             case Orientation.Right:
                 switch (dist) {
                     case Distance.Normal: EventRightNormal = programmableCode;
-                        event = onEventRightNormal;
+                        hnd = onEventRightNormal;
                         sig = "rightnormal"
                         break;
                     case Distance.Near: EventRightNear = programmableCode;
-                        event = onEventRightNear;
+                        hnd = onEventRightNear;
                         sig = "rightnear"
                         break;
                     case Distance.Away: EventRightAway = programmableCode;
-                        event = onEventRightAway;
+                        hnd = onEventRightAway;
                         sig = "rightaway"
                         break;
                 }
                 break;
         }
-        item = { handler: event, module: id, signal: sig };
-        EtCommon.eventArray.push(item)
+        EtCommon.events.register(MODULE, sig, "true", hnd)
     }
 }
