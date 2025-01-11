@@ -5,9 +5,6 @@ namespace EtDistance {
     let MODULE = "EtDistance"
 
     export enum Orientation {
-        //% block="front"
-        //% block.loc.nl="voren"
-        Front,
         //% block="left"
         //% block.loc.nl="links"
         Left,
