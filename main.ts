@@ -35,39 +35,39 @@ namespace EtDistance {
     let EventRightNear: EtCommon.eventHandler
     let EventRightAway: EtCommon.eventHandler
 
-    export function onEventFrontNormal(id: string) {
+    export function onEventFrontNormal(id: string, value: string) {
         if (EventFrontNormal) EventFrontNormal(id)
     }
 
-    export function onEventFrontNear(id: string) {
+    export function onEventFrontNear(id: string, value: string) {
         if (EventFrontNear) EventFrontNear(id)
     }
 
-    export function onEventFrontAway(id: string) {
+    export function onEventFrontAway(id: string, value: string) {
         if (EventFrontAway) EventFrontAway(id)
     }
 
-    export function onEventLeftNormal(id: string) {
+    export function onEventLeftNormal(id: string, value: string) {
         if (EventLeftNormal) EventLeftNormal(id)
     }
 
-    export function onEventLeftNear(id: string) {
+    export function onEventLeftNear(id: string, value: string) {
         if (EventLeftNear) EventLeftNear(id)
     }
 
-    export function onEventLeftAway(id: string) {
+    export function onEventLeftAway(id: string, value: string) {
         if (EventLeftAway) EventLeftAway(id)
     }
 
-    export function onEventRightNormal(id: string) {
+    export function onEventRightNormal(id: string, value: string) {
         if (EventRightNormal) EventRightNormal(id)
     }
 
-    export function onEventRightNear(id: string) {
+    export function onEventRightNear(id: string, value: string) {
         if (EventRightNear) EventRightNear(id)
     }
 
-    export function onEventRightAway(id: string) {
+    export function onEventRightAway(id: string, value: string) {
         if (EventRightAway) EventRightAway(id)
     }
 
@@ -92,20 +92,7 @@ namespace EtDistance {
     //% away.min=20 away.max=300 away.defl=275
     export function setDistribution(id: string, near: number, away: number) {
         let val = near.toString() + "/" + away.toString()
-        EtCommon.setValue(id, "distribution", val)
-    }
-
-    //% block="the distance in cm to %id"
-    //% block.loc.nl="de afstand in cm tot %id"
-    //% id.defl="EtDistance"
-    export function askDistance(id: string): number {
-        EtCommon.askValue(id, "distance")
-        let ret: string
-        do {
-            ret = EtCommon.getValue(MODULE, "A", "distance")
-        }
-        while (ret.isEmpty())
-        return parseFloat(ret)
+        EtCommon.sendSignal(id, "distribution", val)
     }
 
     //% block="point %id %degr degrees to the %ori"
@@ -115,14 +102,14 @@ namespace EtDistance {
     export function setAngle(id: string, degr: number, ori: Orientation) {
         if (ori == Orientation.Left)
             degr = -degr
-        EtCommon.setValue(id, "angle", degr.toString())
+        EtCommon.sendSignal(id, "angle", degr.toString())
     }
 
     //% block="point %id straight to the front"
     //% block.loc.nl="richt %id recht naar voren"
     //% id.defl="EtDistance"
     export function setFront(id: string) {
-        EtCommon.setValue(id, "angle", "0")
+        EtCommon.sendSignal(id, "angle", "0")
     }
 
     //% block="when the distance to %id is %dist"
@@ -132,15 +119,15 @@ namespace EtDistance {
         switch (dist) {
             case Distance.Normal:
                 EventFrontNormal = programmableCode
-                EtCommon.events.register(MODULE, "distance", "normal", onEventFrontNormal)
+                EtCommon.events.register(MODULE, "normal", onEventFrontNormal)
                 break
             case Distance.Near:
                 EventFrontNear = programmableCode
-                EtCommon.events.register(MODULE, "distance", "near", onEventFrontNear)
+                EtCommon.events.register(MODULE, "near", onEventFrontNear)
                 break
             case Distance.Away:
                 EventFrontAway = programmableCode
-                EtCommon.events.register(MODULE, "distance", "away", onEventFrontAway)
+                EtCommon.events.register(MODULE, "away", onEventFrontAway)
                 break
         }
     }
