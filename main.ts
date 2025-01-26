@@ -1,6 +1,6 @@
 //% color="#EEAA00" icon="\uf140"
 //% block="ET: Distance"
-//% block.loc.nl="ET: Distance"
+//% block.loc.nl="ET: Afstand"
 namespace EtDistance {
     let MODULE = "EtDistance"
 
