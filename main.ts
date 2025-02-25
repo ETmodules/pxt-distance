@@ -25,50 +25,22 @@ namespace EtDistance {
         Away
     }
 
-    let EventFrontNormal: EtCommon.eventHandler
-    let EventFrontNear: EtCommon.eventHandler
-    let EventFrontAway: EtCommon.eventHandler
-    let EventLeftNormal: EtCommon.eventHandler
-    let EventLeftNear: EtCommon.eventHandler
-    let EventLeftAway: EtCommon.eventHandler
-    let EventRightNormal: EtCommon.eventHandler
-    let EventRightNear: EtCommon.eventHandler
-    let EventRightAway: EtCommon.eventHandler
+    let DISTANCE = Distance.Normal
 
-    export function onEventFrontNormal(id: string, value: string) {
-        if (EventFrontNormal) EventFrontNormal(id)
+    let EventNormal: EtCommon.eventHandler
+    let EventNear: EtCommon.eventHandler
+    let EventAway: EtCommon.eventHandler
+
+    export function onEventNormal(id: string, value: string) {
+        if (EventNormal) EventNormal(id)
     }
 
-    export function onEventFrontNear(id: string, value: string) {
-        if (EventFrontNear) EventFrontNear(id)
+    export function onEventNear(id: string, value: string) {
+        if (EventNear) EventNear(id)
     }
 
-    export function onEventFrontAway(id: string, value: string) {
-        if (EventFrontAway) EventFrontAway(id)
-    }
-
-    export function onEventLeftNormal(id: string, value: string) {
-        if (EventLeftNormal) EventLeftNormal(id)
-    }
-
-    export function onEventLeftNear(id: string, value: string) {
-        if (EventLeftNear) EventLeftNear(id)
-    }
-
-    export function onEventLeftAway(id: string, value: string) {
-        if (EventLeftAway) EventLeftAway(id)
-    }
-
-    export function onEventRightNormal(id: string, value: string) {
-        if (EventRightNormal) EventRightNormal(id)
-    }
-
-    export function onEventRightNear(id: string, value: string) {
-        if (EventRightNear) EventRightNear(id)
-    }
-
-    export function onEventRightAway(id: string, value: string) {
-        if (EventRightAway) EventRightAway(id)
+    export function onEventAway(id: string, value: string) {
+        if (EventAway) EventAway(id)
     }
 
     //% block="ID"
@@ -81,7 +53,18 @@ namespace EtDistance {
     //% block.loc.nl="stel de module id in op %id"
     //% id.defl="EtDistance"
     export function setModuleId(id: string) {
+        EtCommon.events.unregister(MODULE)
         MODULE = id
+        EtCommon.events.register(id, "normal", onEventNormal)
+        EtCommon.events.register(id, "near", onEventNear)
+        EtCommon.events.register(id, "away", onEventAway)
+    }
+
+    //% block="the distance to %id is %state"
+    //% block.loc.nl="de afstand tot %id %state"
+    //% id.defl="EtGate"
+    export function askDistance(id: string, dist: Distance): boolean {
+        return (DISTANCE == dist)
     }
 
     //% block="with %id is %near cm nearby and %away cm far away"
@@ -118,17 +101,19 @@ namespace EtDistance {
     export function onDistance(id: string, dist: Distance, programmableCode: () => void): void {
         switch (dist) {
             case Distance.Normal:
-                EventFrontNormal = programmableCode
-                EtCommon.events.register(MODULE, "normal", onEventFrontNormal)
+                EventNormal = programmableCode
                 break
             case Distance.Near:
-                EventFrontNear = programmableCode
-                EtCommon.events.register(MODULE, "near", onEventFrontNear)
+                EventNear = programmableCode
                 break
             case Distance.Away:
-                EventFrontAway = programmableCode
-                EtCommon.events.register(MODULE, "away", onEventFrontAway)
+                EventAway = programmableCode
                 break
         }
     }
+
+    EtCommon.events.register(MODULE, "normal", onEventNormal)
+    EtCommon.events.register(MODULE, "near", onEventNear)
+    EtCommon.events.register(MODULE, "away", onEventAway)
+
 }
